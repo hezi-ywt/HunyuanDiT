@@ -76,10 +76,10 @@ class TextImageArrowStream(Dataset):
             ]
         )
         # tag_edit
-        self.replace_to_zn = 0.2
-        self.copyright_dropout = 0.05
-        self.year_dropout = 0.005
-        self.meta_dropout = 0.005
+        self.replace_to_zn = 0.5
+        self.copyright_dropout = 0.5
+        self.year_dropout = 0.5
+        self.meta_dropout = 0.5
         
         # show info
         if self.merge_src_cond:
@@ -219,78 +219,73 @@ class TextImageArrowStream(Dataset):
 
     def get_original_text(self, ind):
         text = self.index_manager.get_attribute(ind, 'text_zh' if self.enable_CN else 'text_en')
-        
+        text = str(text).strip().split(", ")
 
         text1 = self.index_manager.get_attribute(ind, 'text_zh1')
-        
+        text1 = str(text1).strip().split(", ")
         text2 = self.index_manager.get_attribute(ind, 'text_zh2')
-  
+        text2 = str(text2).strip().split(", ")
         
         text_list = []
         if text != '':
             text_list.append(text)
         if text1 != '':
-            
             text_list.append(text1)
         if text2 != '':
             text_list.append(text2)
         
         text = random.choice(text_list)
-        text = str(text).strip().split(", ")
-        # print(f"text: {text}")
-        # for i , k in enumerate(text_list):
-        #     if k == text:
-        #         print(f"text: {i}")
+        print(f"text: {text}")
+        for i , k in enumerate(text_list):
+            if k == text:
+                print(f"text: {i}")
 
         # artist = self.index_manager.get_attribute(ind, 'artist')
-        character = self.index_manager.get_attribute(ind, 'character')
+        # character = self.index_manager.get_attribute(ind, 'tag_string_character')
         character_zh = self.index_manager.get_attribute(ind, 'character_zh')
         # general = self.index_manager.get_attribute(ind, 'tag_string_general')
         copyright_tag = self.index_manager.get_attribute(ind, 'copyright')
         meta = self.index_manager.get_attribute(ind, 'meta')
         year = self.index_manager.get_attribute(ind, 'year')
         
+        for i in character_zh:
+            print(f"meta: {i}")
         if meta != "":
 
             if random.random() < self.meta_dropout:
-                if isinstance(meta, str):
-                    meta = meta.split(", ")
 
                 for tag in meta:
                     if tag in text:
                         text.remove(tag)
-                    
         if year != '':
             if random.random() < self.year_dropout:
-                if isinstance(year, list):
-                    for tag in year:
-                        if tag in text:
-                            text.remove(tag)
+                
+                print(f"year: {year}")
+                for tag in year:
+                    if tag in text:
+                        print(f"year: {year}")
+                        text.remove(tag)
         if copyright_tag != '':
             if random.random() < self.copyright_dropout:
-                if isinstance(copyright_tag, list):
-                    for tag in copyright_tag:
-                        if tag in text:
-                            text.remove(tag)
-                if isinstance(character, list):
-                    for tag in character:
-                        if tag in text:
-                            text.remove(tag)
+
+                for tag in copyright_tag:
+                    if tag in text:
+                        text.remove(tag)
+        
         if character_zh != '':
             if random.random() < self.replace_to_zn:
                 for character, replacement in character_zh.items():
                     new_text = []
                     for i, char in enumerate(text):
                         if char == character:
-                            new_text.append(str(replacement))
+                            new_text.append(replacement)
                         else:
                             new_text.append(char)
                     text = new_text
 
-
-        text = ', '.join(text)
-
         
+        text = ', '.join(text)
+        print(f"text: {text}")
         return text
     
 

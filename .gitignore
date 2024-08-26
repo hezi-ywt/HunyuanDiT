@@ -137,3 +137,10 @@ trt/activate.sh
 trt/deactivate.sh
 *.onnx
 ckpts/
+ckpts1/
+controlnet/
+data/
+data1/
+log_EXP/
+dataset/
+caption.json

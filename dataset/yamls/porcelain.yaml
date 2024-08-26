@@ -1,15 +1,3 @@
 source:
-    - ./dataset/porcelain/arrows/00000.arrow
+    - /home1/qbs/my_program1/HunyuanDiT/data1/arrows/*.arrow
 
-filter:
-    column:
-        -   name: height
-            type: int
-            action: ge
-            target: 1024
-            default: 1024
-        -   name: width
-            type: int
-            action: ge
-            target: 1024
-            default: 1024

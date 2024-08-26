@@ -502,6 +502,7 @@ class GaussianDiffusion:
         if model_kwargs is None:
             model_kwargs = {}
         # Time steps
+        # t = th.randint(300, self.num_timesteps, (x_start.shape[0],), device=x_start.device)
         t = th.randint(0, self.num_timesteps, (x_start.shape[0],), device=x_start.device)
         # Noise
         if noise is None:
